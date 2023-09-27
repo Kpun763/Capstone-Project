@@ -16,7 +16,7 @@ namespace FullStackAuth_WebAPI.Models
         public double Rating { get; set; }
 
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
     }
 }
