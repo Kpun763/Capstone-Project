@@ -10,7 +10,7 @@ namespace FullStackAuth_WebAPI.Models
 
         public int AnimeId { get; set; }
 
-        public string Text { get; set; }
+        public string Title { get; set; }
 
         public bool WasViewed { get; set; }
 
