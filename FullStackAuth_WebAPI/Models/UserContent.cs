@@ -8,6 +8,8 @@ namespace FullStackAuth_WebAPI.Models
     {
         [Key]
         public int Id { get; set; }
+        public string Title { get; set; }
+        public string ContentText { get; set; }
 
         [ForeignKey("User")]
         public string UserId { get; set; }
