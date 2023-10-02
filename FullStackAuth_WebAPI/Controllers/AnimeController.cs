@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FullStackAuth_WebAPI.Controllers
 {
@@ -8,36 +9,44 @@ namespace FullStackAuth_WebAPI.Controllers
     [ApiController]
     public class AnimeController : ControllerBase
     {
-        // GET: api/<AnimeController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly HttpClient _httpClient;
+
+        public AnimeController(IHttpClientFactory httpClientFactory)
         {
-            return new string[] { "value1", "value2" };
+            _httpClient = httpClientFactory.CreateClient();
+            // Configure the HTTP client with the base URL of the anime API and any necessary headers.
+            _httpClient.BaseAddress = new Uri("https://api.example.com/anime/");
+            // Add headers if required for authentication or other purposes.
         }
 
-        // GET api/<AnimeController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchAnime([FromQuery] string query)
         {
-            return "value";
+            try
+            {
+                // Make a request to the external anime API to search for anime based on the query.
+                var response = await _httpClient.GetAsync($"search?query={query}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserialize the response and map it to your application's models or DTOs.
+                    var animeData = await response.Content.ReadAsAsync<AnimeSearchResult>();
+
+                    // Process the data as needed and return it as JSON.
+                    return Ok(animeData);
+                }
+                else
+                {
+                    // Handle API errors and return an appropriate response.
+                    return StatusCode((int)response.StatusCode, "Error from external API");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return an appropriate error response.
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // POST api/<AnimeController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AnimeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AnimeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
