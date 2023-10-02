@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Security.Claims;
-using FullStackAuth_WebAPI.DataTransferObjects;
+using System.Linq;
+using FullStackAuth_WebAPI.Data;
 using FullStackAuth_WebAPI.Models;
 
 namespace FullStackAuth_WebAPI.Controllers
@@ -11,19 +10,43 @@ namespace FullStackAuth_WebAPI.Controllers
     [ApiController]
     public class UserContentController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public UserContentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/UserContent
         [HttpGet]
-        [Authorize]
-        public IActionResult GetUserContent()
+        public IActionResult Get()
         {
             try
             {
-                // Retrieve user's content based on their ID
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                // Retrieve all user-generated content
+                var userContents = _context.UserContents.ToList();
+                return Ok(userContents);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return an appropriate error response
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-                // Retrieve and return user's content (blog posts, reviews, art, etc.)
-                // You might want to use a service to handle this logic
-                var userContent = _userContentService.GetUserContent(userId);
+        // GET: api/UserContent/5
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                // Retrieve user-generated content by ID
+                var userContent = _context.UserContents.FirstOrDefault(uc => uc.Id == id);
+
+                if (userContent == null)
+                {
+                    return NotFound();
+                }
 
                 return Ok(userContent);
             }
@@ -36,26 +59,15 @@ namespace FullStackAuth_WebAPI.Controllers
 
         // POST: api/UserContent
         [HttpPost]
-        [Authorize]
-        public IActionResult CreateUserContent([FromBody] UserContentDto userContentDto)
+        public IActionResult Post([FromBody] UserContent userContent)
         {
             try
             {
-                // Retrieve user's ID from the authentication token
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                // Add user-generated content to the database
+                _context.UserContents.Add(userContent);
+                _context.SaveChanges();
 
-                // Map the DTO to your UserContent entity
-                var userContent = _mapper.Map<UserContent>(userContentDto);
-
-                // Set the user's ID
-                userContent.UserId = userId;
-
-                // Perform any additional validation or business logic here
-
-                // Save the user's content
-                _userContentService.CreateUserContent(userContent);
-
-                return CreatedAtAction("GetUserContent", new { id = userContent.Id }, userContent);
+                return CreatedAtAction("Get", new { id = userContent.Id }, userContent);
             }
             catch (Exception ex)
             {
@@ -63,4 +75,64 @@ namespace FullStackAuth_WebAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        // PUT: api/UserContent/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] UserContent updatedUserContent)
+        {
+            try
+            {
+                // Find existing user-generated content by ID
+                var existingUserContent = _context.UserContents.FirstOrDefault(uc => uc.Id == id);
+
+                if (existingUserContent == null)
+                {
+                    return NotFound();
+                }
+
+                // Update the properties of the existing content
+                existingUserContent.Title = updatedUserContent.Title;
+                existingUserContent.ContentText = updatedUserContent.ContentText;
+
+                // Save changes to the database
+                _context.SaveChanges();
+
+                return Ok(existingUserContent);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return an appropriate error response
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // DELETE: api/UserContent/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                // Find existing user-generated content by ID
+                var userContent = _context.UserContents.FirstOrDefault(uc => uc.Id == id);
+
+                if (userContent == null)
+                {
+                    return NotFound();
+                }
+
+                // Remove the content from the database
+                _context.UserContents.Remove(userContent);
+                _context.SaveChanges();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return an appropriate error response
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    }
 }
+  
+

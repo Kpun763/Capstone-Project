@@ -29,32 +29,7 @@ namespace FullStackAuth_WebAPI.Controllers
 
         [HttpPost("profile")]
         [Authorize] // Requires authentication to create a user profile
-        public IActionResult CreateUserProfile([FromBody] UserProfileDTO userProfileDto)
-        {
-            try
-            {
-                // Get the authenticated user's ID
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // Map the DTO to your UserProfile entity
-                var userProfile = _mapper.Map<UserProfile>(userProfileDto);
-
-                // Set the user ID
-                userProfile.UserId = userId;
-
-                // Perform any additional validation or business logic here
-
-                // Save the user profile
-                _profileService.CreateUserProfile(userProfile);
-
-                return CreatedAtAction("GetUserProfile", new { id = userProfile.Id }, userProfile);
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions and return an appropriate error response
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+       
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
