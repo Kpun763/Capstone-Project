@@ -28,7 +28,15 @@ namespace FullStackAuth_WebAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+          .HasMany(u => u.ViewedAnimeList) // One user has many viewed anime entries
+          .WithOne(vl => vl.User) // Each viewed anime entry belongs to one user
+          .HasForeignKey(vl => vl.UserId);
+
+
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
+
+
         }
     }
 }
