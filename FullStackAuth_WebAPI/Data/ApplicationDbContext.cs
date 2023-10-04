@@ -17,7 +17,7 @@ namespace FullStackAuth_WebAPI.Data
         public DbSet<UserHomepage> UserHomepages { get; set; }
         public DbSet<ViewedList> ViewedLists { get; set; }
 
-
+        public DbSet<BlogPost> BlogPosts { get; set; }
         public ApplicationDbContext(DbContextOptions options)
     : base(options)
         {

@@ -32,9 +32,9 @@ namespace FullStackAuth_WebAPI.Controllers
 
                 // Retrieve user's homepage content
                 var userHomepage = await _context.UserHomepages
-                    .Include(uh => uh.BlogPosts) // Assuming you have a navigation property for blog posts
-                    .Include(uh => uh.Reviews) // Assuming you have a navigation property for reviews
-                    .Include(uh => uh.Gallery) // Assuming you have a navigation property for the gallery
+                    .Include(uh => uh.BlogPosts) 
+                    .Include(uh => uh.Reviews) 
+                    .Include(uh => uh.Gallery) 
                     .FirstOrDefaultAsync(uh => uh.UserId == userId);
 
                 if (userHomepage == null)
