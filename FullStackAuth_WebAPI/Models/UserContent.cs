@@ -15,20 +15,12 @@ namespace FullStackAuth_WebAPI.Models
         public string UserId { get; set; }
         public User User { get; set; }
 
-        [ForeignKey("Reviews")]
-        public int ReviewId { get; set; }
-        public Reviews Reviews { get; set; }
+        public ICollection<Review> Reviews { get; set; }
 
-        [ForeignKey("ViewedList")]
-        public int ViewedListId { get; set; }
-        public ViewedList ViewedList { get; set; }
+        public ICollection<ViewedList> ViewedLists { get; set; }
+        public ICollection<Image> Gallery { get; set; }
 
-        [ForeignKey("Gallery")]
-        public int GalleryId { get; set; }
-        public Gallery Gallery { get; set; }
-
-        [ForeignKey("FriendsList")]
-        public int FriendsListId { get; set; }
-        public FriendsList FriendsList { get; set; }
+        public ICollection<Friend> FriendsAsUser1 { get; set; }
+        public ICollection<Friend> FriendsAsUser2 { get; set; }
     }
 }

@@ -9,10 +9,10 @@ namespace FullStackAuth_WebAPI.Data
     {
         public DbSet<Car> Cars { get; set; }
 
-        public DbSet<FriendsList> FriendsList { get; set; }
-        public DbSet<Gallery> Galleries { get; set; }
-        public DbSet<Notifications> Notifications { get; set; }
-        public DbSet<Reviews> Reviews { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+        public DbSet<Image> Galleries { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<UserContent> UserContents { get; set; }
         public DbSet<UserHomepage> UserHomepages { get; set; }
         public DbSet<ViewedList> ViewedLists { get; set; }
@@ -29,14 +29,16 @@ namespace FullStackAuth_WebAPI.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-          .HasMany(u => u.ViewedAnimeList) // One user has many viewed anime entries
-          .WithOne(vl => vl.User) // Each viewed anime entry belongs to one user
-          .HasForeignKey(vl => vl.UserId);
+                .HasMany(u => u.ViewedAnimeList)
+                .WithOne(vl => vl.User)
+                .HasForeignKey(vl => vl.UserId);
 
+            modelBuilder.Entity<Friend>().HasKey(f => f.Id);
+            modelBuilder.Entity<Friend>().HasIndex(f => new { f.User1Id, f.User2Id }).IsUnique();
+            modelBuilder.Entity<Friend>().HasOne(f => f.User1).WithMany().HasForeignKey(f => f.User1Id).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Friend>().HasOne(f => f.User2).WithMany().HasForeignKey(f => f.User2Id).OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.ApplyConfiguration(new RolesConfiguration());
-
-
+  
         }
     }
 }

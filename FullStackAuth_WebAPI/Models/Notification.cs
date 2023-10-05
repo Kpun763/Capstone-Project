@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FullStackAuth_WebAPI.Models
 {
-    public class Notifications
+    public class Notification
     {
         [Key]
         public int Id { get; set; }

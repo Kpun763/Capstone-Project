@@ -16,8 +16,8 @@ namespace FullStackAuth_WebAPI.Models
         public UserContent UserContent { get; set; }
 
         public ICollection<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
-        public ICollection<Reviews> Reviews { get; set; } = new List<Reviews>();
-        public ICollection<Gallery> Gallery { get; set; } = new List<Gallery>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<Image> Gallery { get; set; } = new List<Image>();
     }
 }
 

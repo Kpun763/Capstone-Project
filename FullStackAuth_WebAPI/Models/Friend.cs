@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FullStackAuth_WebAPI.Models
 {
-    public class FriendsList
+    public class Friend
     {
         [Key]
         public int Id { get; set; }
@@ -17,7 +17,14 @@ namespace FullStackAuth_WebAPI.Models
         [ForeignKey("User")]
         public string User2Id { get; set; }
         public User User2 { get; set; }
-
        
+    }
+
+    public class SendInRequest
+    {
+        public string User1Id { get; set; }
+        public string User2Id { get; set; }
+
+        public char Status { get; set; }
     }
 }

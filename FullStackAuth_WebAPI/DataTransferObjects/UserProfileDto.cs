@@ -6,7 +6,7 @@
         public string LastName { get; set; }
         public string UserName { get; set; }
         
-        // Add other profile-related properties as needed
+       
 
     }
 }

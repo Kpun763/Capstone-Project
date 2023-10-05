@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace FullStackAuth_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -194,52 +194,6 @@ namespace FullStackAuth_WebAPI.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "FriendsLists",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(type: "varchar(1)", nullable: false),
-                    User1Id = table.Column<string>(type: "varchar(255)", nullable: true),
-                    User2Id = table.Column<string>(type: "varchar(255)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FriendsLists", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FriendsLists_AspNetUsers_User1Id",
-                        column: x => x.User1Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FriendsLists_AspNetUsers_User2Id",
-                        column: x => x.User2Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Galleries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Image = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Galleries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Galleries_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
                 {
@@ -260,24 +214,89 @@ namespace FullStackAuth_WebAPI.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "UserContents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    AnimeId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "longtext", nullable: true),
-                    Rating = table.Column<double>(type: "double", nullable: false),
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    ContentText = table.Column<string>(type: "longtext", nullable: true),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("PK_UserContents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_AspNetUsers_UserId",
+                        name: "FK_UserContents_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Friends",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Status = table.Column<string>(type: "varchar(1)", nullable: false),
+                    User1Id = table.Column<string>(type: "varchar(255)", nullable: true),
+                    User2Id = table.Column<string>(type: "varchar(255)", nullable: true),
+                    UserContentId = table.Column<int>(type: "int", nullable: true),
+                    UserContentId1 = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Friends", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Friends_AspNetUsers_User1Id",
+                        column: x => x.User1Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Friends_AspNetUsers_User2Id",
+                        column: x => x.User2Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Friends_UserContents_UserContentId",
+                        column: x => x.UserContentId,
+                        principalTable: "UserContents",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Friends_UserContents_UserContentId1",
+                        column: x => x.UserContentId1,
+                        principalTable: "UserContents",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UserHomepages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    UserContentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserHomepages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserHomepages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserHomepages_UserContents_UserContentId",
+                        column: x => x.UserContentId,
+                        principalTable: "UserContents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -290,7 +309,8 @@ namespace FullStackAuth_WebAPI.Migrations
                     AnimeId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "longtext", nullable: true),
                     WasViewed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    UserContentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -300,79 +320,106 @@ namespace FullStackAuth_WebAPI.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserContents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
-                    ReviewId = table.Column<int>(type: "int", nullable: false),
-                    ViewedListId = table.Column<int>(type: "int", nullable: false),
-                    GalleryId = table.Column<int>(type: "int", nullable: false),
-                    FriendsListId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserContents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserContents_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserContents_FriendsLists_FriendsListId",
-                        column: x => x.FriendsListId,
-                        principalTable: "FriendsLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserContents_Galleries_GalleryId",
-                        column: x => x.GalleryId,
-                        principalTable: "Galleries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserContents_Reviews_ReviewId",
-                        column: x => x.ReviewId,
-                        principalTable: "Reviews",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserContents_ViewedLists_ViewedListId",
-                        column: x => x.ViewedListId,
-                        principalTable: "ViewedLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserHomepages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
-                    UserName = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserHomepages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserHomepages_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserHomepages_UserContents_UserName",
-                        column: x => x.UserName,
+                        name: "FK_ViewedLists_UserContents_UserContentId",
+                        column: x => x.UserContentId,
                         principalTable: "UserContents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "BlogPosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "longtext", nullable: false),
+                    Content = table.Column<string>(type: "longtext", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    UserHomepageId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlogPosts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BlogPosts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BlogPosts_UserHomepages_UserHomepageId",
+                        column: x => x.UserHomepageId,
+                        principalTable: "UserHomepages",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Galleries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    UserContentId = table.Column<int>(type: "int", nullable: true),
+                    UserHomepageId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Galleries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Galleries_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Galleries_UserContents_UserContentId",
+                        column: x => x.UserContentId,
+                        principalTable: "UserContents",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Galleries_UserHomepages_UserHomepageId",
+                        column: x => x.UserHomepageId,
+                        principalTable: "UserHomepages",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    AnimeId = table.Column<int>(type: "int", nullable: false),
+                    Text = table.Column<string>(type: "longtext", nullable: true),
+                    Rating = table.Column<double>(type: "double", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    UserContentId = table.Column<int>(type: "int", nullable: true),
+                    UserHomepageId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviews_UserContents_UserContentId",
+                        column: x => x.UserContentId,
+                        principalTable: "UserContents",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviews_UserHomepages_UserHomepageId",
+                        column: x => x.UserHomepageId,
+                        principalTable: "UserHomepages",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -381,8 +428,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7765cda9-3826-4529-b3ba-d8dbc0606ef3", null, "User", "USER" },
-                    { "f5b1c094-772f-4e83-948b-416b7cdc1c08", null, "Admin", "ADMIN" }
+                    { "7bfc8432-f320-4064-93bb-39affb42c90a", null, "Admin", "ADMIN" },
+                    { "c098f007-fc6b-49bc-aa3a-502bf12db325", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -423,19 +470,50 @@ namespace FullStackAuth_WebAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlogPosts_UserHomepageId",
+                table: "BlogPosts",
+                column: "UserHomepageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlogPosts_UserId",
+                table: "BlogPosts",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cars_OwnerId",
                 table: "Cars",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsLists_User1Id",
-                table: "FriendsLists",
-                column: "User1Id");
+                name: "IX_Friends_User1Id_User2Id",
+                table: "Friends",
+                columns: new[] { "User1Id", "User2Id" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsLists_User2Id",
-                table: "FriendsLists",
+                name: "IX_Friends_User2Id",
+                table: "Friends",
                 column: "User2Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_UserContentId",
+                table: "Friends",
+                column: "UserContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_UserContentId1",
+                table: "Friends",
+                column: "UserContentId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Galleries_UserContentId",
+                table: "Galleries",
+                column: "UserContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Galleries_UserHomepageId",
+                table: "Galleries",
+                column: "UserHomepageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Galleries_UserId",
@@ -448,24 +526,19 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserContentId",
+                table: "Reviews",
+                column: "UserContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserHomepageId",
+                table: "Reviews",
+                column: "UserHomepageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_UserId",
                 table: "Reviews",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserContents_FriendsListId",
-                table: "UserContents",
-                column: "FriendsListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserContents_GalleryId",
-                table: "UserContents",
-                column: "GalleryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserContents_ReviewId",
-                table: "UserContents",
-                column: "ReviewId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserContents_UserId",
@@ -473,9 +546,9 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserContents_ViewedListId",
-                table: "UserContents",
-                column: "ViewedListId");
+                name: "IX_UserHomepages_UserContentId",
+                table: "UserHomepages",
+                column: "UserContentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserHomepages_UserId",
@@ -483,9 +556,9 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserHomepages_UserName",
-                table: "UserHomepages",
-                column: "UserName");
+                name: "IX_ViewedLists_UserContentId",
+                table: "ViewedLists",
+                column: "UserContentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ViewedLists_UserId",
@@ -512,31 +585,34 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BlogPosts");
+
+            migrationBuilder.DropTable(
                 name: "Cars");
 
             migrationBuilder.DropTable(
-                name: "Notifications");
-
-            migrationBuilder.DropTable(
-                name: "UserHomepages");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "UserContents");
-
-            migrationBuilder.DropTable(
-                name: "FriendsLists");
+                name: "Friends");
 
             migrationBuilder.DropTable(
                 name: "Galleries");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "ViewedLists");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "UserHomepages");
+
+            migrationBuilder.DropTable(
+                name: "UserContents");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

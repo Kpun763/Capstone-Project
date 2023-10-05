@@ -4,20 +4,21 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FullStackAuth_WebAPI.Models
 {
-    public class Reviews
+    public class Image
     {
         [Key]
         public int Id { get; set; }
-
-        public int AnimeId { get; set; }
-
-        public string Text { get; set; }
-
-        public double Rating { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+        [NotMapped]
+        public string ImageSrc { get; set; }
 
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
-
     }
+
+
 }
