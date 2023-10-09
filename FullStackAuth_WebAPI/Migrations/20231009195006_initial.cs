@@ -4,8 +4,6 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace FullStackAuth_WebAPI.Migrations
 {
     /// <inheritdoc />
@@ -39,6 +37,7 @@ namespace FullStackAuth_WebAPI.Migrations
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
                     FirstName = table.Column<string>(type: "longtext", nullable: true),
                     LastName = table.Column<string>(type: "longtext", nullable: true),
+                    FriendId = table.Column<string>(type: "varchar(255)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -57,6 +56,11 @@ namespace FullStackAuth_WebAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AspNetUsers_FriendId",
+                        column: x => x.FriendId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -357,7 +361,7 @@ namespace FullStackAuth_WebAPI.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Galleries",
+                name: "Image",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -370,19 +374,19 @@ namespace FullStackAuth_WebAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Galleries", x => x.Id);
+                    table.PrimaryKey("PK_Image", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Galleries_AspNetUsers_UserId",
+                        name: "FK_Image_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Galleries_UserContents_UserContentId",
+                        name: "FK_Image_UserContents_UserContentId",
                         column: x => x.UserContentId,
                         principalTable: "UserContents",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Galleries_UserHomepages_UserHomepageId",
+                        name: "FK_Image_UserHomepages_UserHomepageId",
                         column: x => x.UserHomepageId,
                         principalTable: "UserHomepages",
                         principalColumn: "Id");
@@ -423,15 +427,6 @@ namespace FullStackAuth_WebAPI.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "7bfc8432-f320-4064-93bb-39affb42c90a", null, "Admin", "ADMIN" },
-                    { "c098f007-fc6b-49bc-aa3a-502bf12db325", null, "User", "USER" }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -462,6 +457,11 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_FriendId",
+                table: "AspNetUsers",
+                column: "FriendId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -506,18 +506,18 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "UserContentId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Galleries_UserContentId",
-                table: "Galleries",
+                name: "IX_Image_UserContentId",
+                table: "Image",
                 column: "UserContentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Galleries_UserHomepageId",
-                table: "Galleries",
+                name: "IX_Image_UserHomepageId",
+                table: "Image",
                 column: "UserHomepageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Galleries_UserId",
-                table: "Galleries",
+                name: "IX_Image_UserId",
+                table: "Image",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -594,7 +594,7 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "Friends");
 
             migrationBuilder.DropTable(
-                name: "Galleries");
+                name: "Image");
 
             migrationBuilder.DropTable(
                 name: "Notifications");

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FullStackAuth_WebAPI.Models
 {
-    public class Image
+    public class ImageUpload
     {
         [Key]
         public int Id { get; set; }

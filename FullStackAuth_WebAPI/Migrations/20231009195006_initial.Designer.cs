@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231006150237_AddFriendToUser")]
-    partial class AddFriendToUser
+    [Migration("20231009195006_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,7 +146,7 @@ namespace FullStackAuth_WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Galleries");
+                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Notification", b =>
@@ -537,7 +537,7 @@ namespace FullStackAuth_WebAPI.Migrations
                         .HasForeignKey("UserHomepageId");
 
                     b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Gallery")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -670,6 +670,8 @@ namespace FullStackAuth_WebAPI.Migrations
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.User", b =>
                 {
+                    b.Navigation("Gallery");
+
                     b.Navigation("ViewedAnimeList");
                 });
 

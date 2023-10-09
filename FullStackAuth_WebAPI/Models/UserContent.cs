@@ -18,7 +18,7 @@ namespace FullStackAuth_WebAPI.Models
         public ICollection<Review> Reviews { get; set; }
 
         public ICollection<ViewedList> ViewedLists { get; set; }
-        public ICollection<Image> Gallery { get; set; }
+        public ICollection<ImageUpload> Gallery { get; set; }
 
         public ICollection<Friend> FriendsAsUser1 { get; set; }
         public ICollection<Friend> FriendsAsUser2 { get; set; }
