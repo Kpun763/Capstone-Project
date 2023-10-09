@@ -8,24 +8,21 @@ namespace FullStackAuth_WebAPI.Controllers
     [ApiController]
     public class GalleryController : ControllerBase
     {
-        // GET: api/<GalleryController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<GalleryController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        
 
         // POST api/<GalleryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> UploadImage(IFormFile image)
         {
+            if (image == null || image.Length == 0)
+            {
+                return BadRequest("Image file is missing or empty.");
+            }
+
+            // Handle image upload logic, save it to a location, and update the user's gallery with the image information.
+
+            // Return a success response.
+            return Ok("Image uploaded successfully.");
         }
 
         // PUT api/<GalleryController>/5
