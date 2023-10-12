@@ -1,43 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FullStackAuth_WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[anime]")]
     [ApiController]
     public class AnimeController : ControllerBase
     {
-        // GET: api/<AnimeController>
+        private static readonly string MyAnimeListApiKey = "4c9b309b7dc9dc87f29fbf259084aac5";
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetAnimeInfo(string search)
         {
-            return new string[] { "value1", "value2" };
-        }
+            using (var client = new HttpClient())
+            {
+                // Set your API key in the request headers
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {MyAnimeListApiKey}");
 
-        // GET api/<AnimeController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+                // Define your request URI based on the MyAnimeList API documentation
+                var requestUri = new Uri($"https://api.myanimelist.net/v2/anime?query={search}");
 
-        // POST api/<AnimeController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+                try
+                {
+                    using (var response = await client.GetAsync(requestUri))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        var responseBody = await response.Content.ReadAsStringAsync();
 
-        // PUT api/<AnimeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AnimeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                        // You can now process the responseBody as needed
+                        return Ok(responseBody);
+                    }
+                }
+                catch (HttpRequestException)
+                {
+                    return StatusCode(500, "An error occurred when making the request to MyAnimeList API.");
+                }
+            }
         }
     }
 }

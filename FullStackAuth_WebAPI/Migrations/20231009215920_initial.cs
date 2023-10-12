@@ -361,7 +361,7 @@ namespace FullStackAuth_WebAPI.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Image",
+                name: "ImageUpload",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -374,19 +374,19 @@ namespace FullStackAuth_WebAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Image", x => x.Id);
+                    table.PrimaryKey("PK_ImageUpload", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Image_AspNetUsers_UserId",
+                        name: "FK_ImageUpload_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Image_UserContents_UserContentId",
+                        name: "FK_ImageUpload_UserContents_UserContentId",
                         column: x => x.UserContentId,
                         principalTable: "UserContents",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Image_UserHomepages_UserHomepageId",
+                        name: "FK_ImageUpload_UserHomepages_UserHomepageId",
                         column: x => x.UserHomepageId,
                         principalTable: "UserHomepages",
                         principalColumn: "Id");
@@ -506,18 +506,18 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "UserContentId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_UserContentId",
-                table: "Image",
+                name: "IX_ImageUpload_UserContentId",
+                table: "ImageUpload",
                 column: "UserContentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_UserHomepageId",
-                table: "Image",
+                name: "IX_ImageUpload_UserHomepageId",
+                table: "ImageUpload",
                 column: "UserHomepageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_UserId",
-                table: "Image",
+                name: "IX_ImageUpload_UserId",
+                table: "ImageUpload",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -594,7 +594,7 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "Friends");
 
             migrationBuilder.DropTable(
-                name: "Image");
+                name: "ImageUpload");
 
             migrationBuilder.DropTable(
                 name: "Notifications");

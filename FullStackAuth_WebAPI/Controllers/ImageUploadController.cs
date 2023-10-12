@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace projectName.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/imageupload")]
     [ApiController]
     public class ImageUploadController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace projectName.Controllers
             // Query the Image table and project the result into a new collection of ImageUpload.
             // For each image, the ImageSrc is created by combining the request scheme (http or https),
             // the host, the base path of the request, and the name of the image.
-            return await _context.Image.Select(x => new ImageUpload()
+            return await _context.ImageUpload.Select(x => new ImageUpload()
             {
                 Id = x.Id,
                 Title = x.Title,
@@ -48,7 +48,7 @@ namespace projectName.Controllers
             value.Title = await SaveImage(value.ImageFile);
 
             // Add the ImageUpload object to the Image table in the database and save changes.
-            _context.Image.Add(value);
+            _context.ImageUpload.Add(value);
             _context.SaveChanges();
 
             // Return a 201 Created status code and the ImageUpload object.

@@ -114,7 +114,7 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.ToTable("Friends");
                 });
 
-            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Image", b =>
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.ImageUpload", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -143,7 +143,7 @@ namespace FullStackAuth_WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Image");
+                    b.ToTable("ImageUpload");
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Notification", b =>
@@ -523,7 +523,7 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Navigation("User2");
                 });
 
-            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Image", b =>
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.ImageUpload", b =>
                 {
                     b.HasOne("FullStackAuth_WebAPI.Models.UserContent", null)
                         .WithMany("Gallery")

@@ -10,7 +10,7 @@ namespace FullStackAuth_WebAPI.Data
         public DbSet<Car> Cars { get; set; }
 
         public DbSet<Friend> Friends { get; set; }
-        public DbSet<ImageUpload> Image { get; set; }
+        public DbSet<ImageUpload> ImageUpload { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<UserContent> UserContents { get; set; }
