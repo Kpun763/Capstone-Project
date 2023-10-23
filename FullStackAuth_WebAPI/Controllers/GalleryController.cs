@@ -1,6 +1,8 @@
 ﻿using FullStackAuth_WebAPI.Data;
+using FullStackAuth_WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,46 +10,62 @@ namespace FullStackAuth_WebAPI.Controllers
 {
     [Route("api/gallery")]
     [ApiController]
+
     public class GalleryController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public GalleryController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        public GalleryController(ApplicationDbContext context)
         {
             _context = context;
-            this._hostEnvironment = hostEnvironment;
         }
-        // GET: api/<GalleryController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpPost, Authorize]
+        public IActionResult Post([FromBody] Gallery galleryData)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // POST api/<GalleryController>
-        [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile image)
-        {
-            if (image == null || image.Length == 0)
+            if (galleryData == null)
             {
-                return BadRequest("Image file is missing or empty.");
+                return BadRequest("WatchList data is invalid.");
             }
 
-            // Handle image upload logic, save it to a location, and update the user's gallery with the image information.
+            _context.Galleries.Add(galleryData);
+            _context.SaveChanges();
 
-            // Return a success response.
-            
-            return Ok("Image uploaded successfully.");
+            // Return a 201 Created response with the newly created WatchList and its location.
+            return Ok(galleryData);
         }
 
+        // GET: api/<GalleryController>
+        [HttpGet]
+        public IActionResult GetAllGalleries()
+        {
+            try
+            {
+                var galleries = _context.Galleries.ToList();
+                return Ok(galleries);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/<GalleryController>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // PUT api/<GalleryController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
 
         // DELETE api/<GalleryController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
-
-      
     }
 }

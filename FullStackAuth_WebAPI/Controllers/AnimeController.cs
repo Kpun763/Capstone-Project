@@ -1,26 +1,25 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using FullStackAuth_WebAPI.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FullStackAuth_WebAPI.Controllers
 {
-    [Route("api/[anime]")]
+    [Route("api/proxy")]
+    [EnableCors("ReactPolicy")]
     [ApiController]
     public class AnimeController : ControllerBase
     {
-        private static readonly string MyAnimeListApiKey = "4c9b309b7dc9dc87f29fbf259084aac5";
-
-        [HttpGet]
-        public async Task<IActionResult> GetAnimeInfo(string search)
+        [HttpGet("anime/search")]
+        public async Task<IActionResult> SearchAnime(string searchTerm)
         {
             using (var client = new HttpClient())
             {
-                // Set your API key in the request headers
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {MyAnimeListApiKey}");
-
-                // Define your request URI based on the MyAnimeList API documentation
-                var requestUri = new Uri($"https://api.myanimelist.net/v2/anime?query={search}");
+                var requestUri = new Uri($"https://api.myanimelist.net/v2/anime?q={searchTerm}&limit=20");
+                client.DefaultRequestHeaders.Add("X-MAL-CLIENT-ID", "4c9b309b7dc9dc87f29fbf259084aac5");
 
                 try
                 {
@@ -29,8 +28,9 @@ namespace FullStackAuth_WebAPI.Controllers
                         response.EnsureSuccessStatusCode();
                         var responseBody = await response.Content.ReadAsStringAsync();
 
-                        // You can now process the responseBody as needed
-                        return Ok(responseBody);
+                        var animeResponse = JsonConvert.DeserializeObject<AnimeResponse>(responseBody);
+
+                        return Ok(animeResponse);
                     }
                 }
                 catch (HttpRequestException)
@@ -39,5 +39,6 @@ namespace FullStackAuth_WebAPI.Controllers
                 }
             }
         }
+
     }
 }

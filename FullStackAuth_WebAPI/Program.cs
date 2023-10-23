@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Cors;
 
 
 namespace FullStackAuth_WebAPI
@@ -31,6 +32,18 @@ namespace FullStackAuth_WebAPI
             builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             builder.Services.AddControllers();
             builder.Services.AddScoped<UserContentService>();
+
+            // Configure services, including CORS, here
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("ReactPolicy", builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -54,18 +67,21 @@ namespace FullStackAuth_WebAPI
             });
 
             app.UseHttpsRedirection();
-            app.UseCors("CorsPolicy");
+            app.UseRouting();
+
+            app.UseCors("ReactPolicy");
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
-            app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.Run();
         }
