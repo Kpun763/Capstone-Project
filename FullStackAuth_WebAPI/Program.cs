@@ -33,6 +33,7 @@ namespace FullStackAuth_WebAPI
             builder.Services.AddControllers();
             builder.Services.AddScoped<UserContentService>();
 
+
             // Configure services, including CORS, here
             builder.Services.AddCors(options =>
             {

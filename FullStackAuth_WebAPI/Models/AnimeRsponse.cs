@@ -12,7 +12,7 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public AnimePicture MainPicture { get; set; }
+        public AnimePicture main_picture { get; set; }
     }
 
     public class AnimePicture

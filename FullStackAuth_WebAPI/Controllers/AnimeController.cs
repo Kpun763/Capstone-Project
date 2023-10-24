@@ -14,7 +14,7 @@ namespace FullStackAuth_WebAPI.Controllers
     public class AnimeController : ControllerBase
     {
         [HttpGet("anime/search")]
-        public async Task<IActionResult> SearchAnime(string searchTerm)
+        public async Task<IActionResult> SearchAnime([FromQuery] string searchTerm)
         {
             using (var client = new HttpClient())
             {

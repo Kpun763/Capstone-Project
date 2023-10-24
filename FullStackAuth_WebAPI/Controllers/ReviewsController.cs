@@ -19,6 +19,23 @@ namespace FullStackAuth_WebAPI.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public IActionResult GetReviews()
+        {
+            try
+            {
+                // Retrieve all the reviews from your data source (e.g., database)
+                var reviews = _context.Reviews.ToList(); // Adjust this query based on your data storage mechanism
+
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         // POST api/<ReviewsController>
         [HttpPost]
         [Authorize] // Requires authentication

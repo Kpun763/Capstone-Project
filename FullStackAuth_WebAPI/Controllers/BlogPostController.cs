@@ -9,23 +9,34 @@ using System.Security.Claims;
 
 namespace FullStackAuth_WebAPI.Controllers
 {
-    [Route("api/blog")]
+    [Route("api/blogpost")]
     [ApiController]
-    public class BlogController : ControllerBase
+    public class BlogPostController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public BlogController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        public BlogPostController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             this._hostEnvironment = hostEnvironment;
         }
-        // GET: api/<BlogController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+
+        // GET: api/<BlogPostController>
+        [HttpGet("posts")]
+        public IActionResult GetBlogPosts()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                // Retrieve all the blog posts from your data source (e.g., database)
+                var blogPosts = _context.BlogPosts.ToList(); // Adjust this query based on your data storage mechanism
+
+                return Ok(blogPosts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // GET api/<BlogController>/5
@@ -54,26 +65,17 @@ namespace FullStackAuth_WebAPI.Controllers
                     Content = formData.Content,
                     UserId = userId,
                     CreatedAt = DateTime.Now,
-                    ImageUrls = new List<ImageUrl>(),
-                    Type = formData.Type,
-                };
+                   
 
-                // Handle image uploads and save their URLs
-                
-                if (formData.Images != null)
-                {
-                    foreach (var imageFile in formData.Images)
-                    {
-                        string imageUrl = await SaveImage(imageFile); // Implement the SaveImage method to save the image and return its URL
-                        var imageUrlEntity = new ImageUrl { Url = imageUrl, BlogId = blog.Id }; // Set the BlogID here
-                        blog.ImageUrls.Add(imageUrlEntity);
-                    }
-                }
-                
+
+                };
+  
                 blog.UserId = userId;
 
                 _context.BlogPosts.Add(blog);
                 _context.SaveChanges();
+
+ 
 
                 return StatusCode(201, blog);
             }

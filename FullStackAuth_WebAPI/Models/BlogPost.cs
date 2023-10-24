@@ -12,12 +12,8 @@ namespace FullStackAuth_WebAPI.Models
 
         public string Content { get; set; }
 
-        public string Type { get; set; }
-
         [Required]
         public DateTime CreatedAt { get; set; }
-
-        public ICollection<ImageUrl> ImageUrls { get; set; }
 
         // Foreign key to link the blog post to a user
         [ForeignKey("User")]
@@ -34,20 +30,5 @@ namespace FullStackAuth_WebAPI.Models
 
         [Required]
         public DateTime CreatedAt { get; set; }
-
-        public ICollection<ImageUrl> ImageUrls { get; set; }
-
-        public List<IFormFile> Images { get; set; }
-
-        public string Type { get; set; }
-
-    }
-    public class ImageUrl
-    {
-        [Key]
-        public int Id { get; set; }
-        public string Url { get; set; }
-        public int BlogId { get; set; }
-
     }
 }

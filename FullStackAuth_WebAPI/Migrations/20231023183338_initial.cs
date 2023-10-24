@@ -198,6 +198,25 @@ namespace FullStackAuth_WebAPI.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Galleries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Galleries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Galleries_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
                 {
@@ -235,6 +254,27 @@ namespace FullStackAuth_WebAPI.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ImageUrl",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Url = table.Column<string>(type: "longtext", nullable: true),
+                    GalleryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageUrl", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImageUrl_Galleries_GalleryId",
+                        column: x => x.GalleryId,
+                        principalTable: "Galleries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -338,8 +378,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(type: "longtext", nullable: false),
-                    Content = table.Column<string>(type: "longtext", nullable: false),
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    Content = table.Column<string>(type: "longtext", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: true),
                     UserHomepageId = table.Column<int>(type: "int", nullable: true)
@@ -400,8 +440,9 @@ namespace FullStackAuth_WebAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     AnimeId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "longtext", nullable: true),
+                    Text = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
                     Rating = table.Column<double>(type: "double", nullable: false),
+                    ReviewDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: true),
                     UserContentId = table.Column<int>(type: "int", nullable: true),
                     UserHomepageId = table.Column<int>(type: "int", nullable: true)
@@ -506,6 +547,11 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "UserContentId1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Galleries_UserId",
+                table: "Galleries",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ImageUpload_UserContentId",
                 table: "ImageUpload",
                 column: "UserContentId");
@@ -519,6 +565,11 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "IX_ImageUpload_UserId",
                 table: "ImageUpload",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImageUrl_GalleryId",
+                table: "ImageUrl",
+                column: "GalleryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId",
@@ -597,6 +648,9 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "ImageUpload");
 
             migrationBuilder.DropTable(
+                name: "ImageUrl");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -607,6 +661,9 @@ namespace FullStackAuth_WebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Galleries");
 
             migrationBuilder.DropTable(
                 name: "UserHomepages");

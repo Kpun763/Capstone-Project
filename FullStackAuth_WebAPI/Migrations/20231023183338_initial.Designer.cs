@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231023044500_GalleryUpdate")]
-    partial class GalleryUpdate
+    [Migration("20231023183338_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,9 +35,6 @@ namespace FullStackAuth_WebAPI.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Type")
                         .HasColumnType("longtext");
 
                     b.Property<int?>("UserHomepageId")
@@ -124,13 +121,12 @@ namespace FullStackAuth_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TypeID")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Galleries");
                 });
@@ -173,10 +169,7 @@ namespace FullStackAuth_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BlogPostId")
+                    b.Property<int>("GalleryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
@@ -184,7 +177,7 @@ namespace FullStackAuth_WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlogPostId");
+                    b.HasIndex("GalleryId");
 
                     b.ToTable("ImageUrl");
                 });
@@ -530,7 +523,7 @@ namespace FullStackAuth_WebAPI.Migrations
                         .HasForeignKey("UserHomepageId");
 
                     b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
-                        .WithMany()
+                        .WithMany("BlogPosts")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -570,6 +563,15 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Navigation("User2");
                 });
 
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Gallery", b =>
+                {
+                    b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.ImageUpload", b =>
                 {
                     b.HasOne("FullStackAuth_WebAPI.Models.UserContent", null)
@@ -589,9 +591,11 @@ namespace FullStackAuth_WebAPI.Migrations
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.ImageUrl", b =>
                 {
-                    b.HasOne("FullStackAuth_WebAPI.Models.BlogPost", null)
+                    b.HasOne("FullStackAuth_WebAPI.Models.Gallery", null)
                         .WithMany("ImageUrls")
-                        .HasForeignKey("BlogPostId");
+                        .HasForeignKey("GalleryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Notification", b =>
@@ -614,7 +618,7 @@ namespace FullStackAuth_WebAPI.Migrations
                         .HasForeignKey("UserHomepageId");
 
                     b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -719,14 +723,18 @@ namespace FullStackAuth_WebAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FullStackAuth_WebAPI.Models.BlogPost", b =>
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Gallery", b =>
                 {
                     b.Navigation("ImageUrls");
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.User", b =>
                 {
+                    b.Navigation("BlogPosts");
+
                     b.Navigation("Gallery");
+
+                    b.Navigation("Reviews");
 
                     b.Navigation("ViewedAnimeList");
                 });

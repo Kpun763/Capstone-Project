@@ -35,6 +35,18 @@ namespace FullStackAuth_WebAPI.Data
                 .WithOne(vl => vl.User)
                 .HasForeignKey(vl => vl.UserId);
 
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Reviews)
+                .WithOne(r => r.User)
+                .HasForeignKey(r => r.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.BlogPosts)
+                .WithOne(b => b.User)
+                .HasForeignKey(b => b.UserId);
+
+
+
             modelBuilder.Entity<Friend>().HasKey(f => f.Id);
             modelBuilder.Entity<Friend>().HasIndex(f => new { f.User1Id, f.User2Id }).IsUnique();
             modelBuilder.Entity<Friend>().HasOne(f => f.User1).WithMany().HasForeignKey(f => f.User1Id).OnDelete(DeleteBehavior.Cascade);
